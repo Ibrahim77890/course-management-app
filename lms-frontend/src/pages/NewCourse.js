@@ -1,4 +1,4 @@
-import axios from "axios";
+import mockAxios from "../services/mockAxios";
 import React from "react";
 import { courseModel } from "../models/course";
 import "./styles.css"
@@ -51,8 +51,8 @@ const NewCourse = ()=>{
     console.log('Combined Data', formData);
 
     try {
-            const response = await axios.post(
-              "http://localhost:5000/course/new-course",
+            const response = await mockAxios.post(
+              "/course/new-course",
               formData,
               {
                 headers: {

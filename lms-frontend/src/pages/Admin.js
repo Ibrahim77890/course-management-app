@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./styles.css";
 import { useAuth } from "../provider/DetailProvider";
-import axios from "axios";
+import mockAxios from "../services/mockAxios";
 import { useNavigate } from "react-router-dom";
 
 const authToken = localStorage.getItem("token");
@@ -39,8 +39,8 @@ const Admin = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/app/get-users",
+        const response = await mockAxios.get(
+          "/app/get-users",
           {
             headers: {
               "Content-Type": "application/json",
@@ -53,8 +53,8 @@ const Admin = () => {
           console.log(response.data.users);
           setUsers(response?.data?.users);
           try {
-            const finalResponse = await axios.get(
-              "http://localhost:5000/courses/alldata",
+            const finalResponse = await mockAxios.get(
+              "/courses/alldata",
               {
                 headers: {
                   "Content-Type": "application/json",

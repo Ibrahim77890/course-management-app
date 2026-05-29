@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import "./styles.css";
 import { useState } from "react";
-import axios from "axios";
+import mockAxios from "../services/mockAxios";
 import { useAuth } from "../provider/DetailProvider";
 import { useNavigate } from "react-router-dom";
 
@@ -21,7 +21,7 @@ const Cart = () => {
 
     const fetchCart = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/cart", {
+        const response = await mockAxios.get("/cart", {
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${authToken}`,
@@ -43,20 +43,15 @@ const Cart = () => {
 
   const stripePayment = async() => {
     try {
-        const response = await axios.post('http://localhost:5000/cart/purchase', {}, {
+        const response = await mockAxios.post('/cart/purchase', {}, {
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${user.authToken}`,
             },
         })
 
-        const data = response.data;
-        
-        const enrollmentKeys = handlePurchase()
-        console.log(enrollmentKeys)
-
-        if(data.session.url){
-            window.location.href = data.session.url;
+        if(response.data.session?.url){
+          navigate(response.data.session.url);
         }
 
     } catch (error) {
@@ -69,41 +64,23 @@ const Cart = () => {
     }
   }
 
-  const handlePurchase = async() => {
-    try {
-        console.log("clicked")
-        const response = await axios.post('http://localhost:5000/cart/enrollmentKeys',{cart},{headers: {
-            'Content-Type': "application/json",
-            "Authorization": `Bearer ${authToken}`
-        }});
-
-        if(response){
-            alert("Enrollment Key generated")
-            return response.data.enrollmentKeys;
-        }
-    } catch (error) {
-        console.error(error.response ? error.response.data : error.message);
-        alert(
-          `Error: ${
-            error.response ? error.response.data.message : error.message
-          }`
-        );
-    }
-  }
 
   const handleCartQuantityChange = (courseId, newQuantity) => {
     setCart((prevCart) => {
-        return prevCart.map((item) =>
-          item.courseId._id === courseId ? { ...item, quantity: newQuantity } : item
-        );
-      });
+      const updatedCart = prevCart.map((item) =>
+        item.courseId._id === courseId ? { ...item, quantity: newQuantity } : item
+      );
 
-      setTotal((prevCart) => {
-        return cart.reduce((total, item) =>
-          item.courseId._id === courseId ? total + item.courseId.price * newQuantity : total + item.courseId.price * item.quantity
-        , 0);
-      });
-  }
+      setTotal(
+        updatedCart.reduce(
+          (total, item) => total + Number(item.courseId.price || 0) * Number(item.quantity || 1),
+          0
+        )
+      );
+
+      return updatedCart;
+    });
+  };
 
   return (
     <div className="h-screen w-screen flex flex-col bg-[#F3F4F6] overflow-auto p-8">
@@ -120,7 +97,7 @@ const Cart = () => {
                   <div className="h-1/2 flex justify-between font-semibold">
                     <p>{item?.courseId?.title}</p>
                     <div class="flex items-center border-gray-700">
-                      <span onClick={()=>handleCartQuantityChange(item?.courseId, item.quantity > 1 ? item.quantity -= 1 : 1)} class="border-2 border-gray-300 cursor-pointer rounded-l justify-center flex bg-gray-100 py-1.5 px-3 duration-100 hover:bg-blue-500 hover:text-blue-50">
+                      <span onClick={()=>handleCartQuantityChange(item?.courseId, item.quantity > 1 ? item.quantity - 1 : 1)} class="border-2 border-gray-300 cursor-pointer rounded-l justify-center flex bg-gray-100 py-1.5 px-3 duration-100 hover:bg-blue-500 hover:text-blue-50">
                         -
                       </span>
                       <input
@@ -129,7 +106,7 @@ const Cart = () => {
                         value={item.quantity}
                         min="0"
                       />
-                      <span onClick={()=>handleCartQuantityChange(item?.courseId, item.quantity += 1)} class="border-2 border-gray-300 cursor-pointer rounded-r justify-center flex bg-gray-100 py-1.5 px-3 duration-100 hover:bg-blue-500 hover:text-blue-50">
+                      <span onClick={()=>handleCartQuantityChange(item?.courseId, item.quantity + 1)} class="border-2 border-gray-300 cursor-pointer rounded-r justify-center flex bg-gray-100 py-1.5 px-3 duration-100 hover:bg-blue-500 hover:text-blue-50">
                         +
                       </span>
                     </div>

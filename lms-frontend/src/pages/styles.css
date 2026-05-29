@@ -1,108 +1,45 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Rowdies:wght@300;400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Luckiest+Guy&family=Rowdies:wght@300;400;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Tiny5&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Luckiest+Guy&family=Nunito+Sans:wght@300;400;600;700;800&family=Rowdies:wght@300;400;700&family=Ubuntu:wght@300;400;500;700&display=swap");
 
-.tiny5-regular {
-  font-family: "Tiny5", sans-serif;
-  font-weight: 400;
-  font-style: normal;
+.rowdies-regular,
+.rowdies-bold,
+.rowdies-light,
+.rowdies-medium {
+  font-family: "Rowdies", sans-serif;
 }
 
+.luckiest-guy-regular {
+  font-family: "Luckiest Guy", cursive;
+}
 
-.nunito-sans-medium {
+.ubuntu-light,
+.ubuntu-regular,
+.ubuntu-medium,
+.ubuntu-bold {
+  font-family: "Ubuntu", sans-serif;
+}
+
+.nunito-sans-light,
+.nunito-sans-regular,
+.nunito-sans-medium,
+.nunito-sans-bold,
+.nunito-sans-extrabold {
   font-family: "Nunito Sans", sans-serif;
-  font-optical-sizing: auto;
-  font-weight: 700;
-  font-style: normal;
-  font-variation-settings:
-    "wdth" 100,
-    "YTLC" 500;
 }
 
+.dm-sans-light,
+.dm-sans-regular,
+.dm-sans-medium,
+.dm-sans-bold {
+  font-family: "DM Sans", sans-serif;
+}
 
-.ubuntu-light {
-    font-family: "Ubuntu", sans-serif;
-    font-weight: 300;
-    font-style: normal;
-  }
-  
-  .ubuntu-regular {
-    font-family: "Ubuntu", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-  }
-  
-  .ubuntu-medium {
-    font-family: "Ubuntu", sans-serif;
-    font-weight: 500;
-    font-style: normal;
-  }
-  
-  .ubuntu-bold {
-    font-family: "Ubuntu", sans-serif;
-    font-weight: 700;
-    font-style: normal;
-  }
-  
-  .ubuntu-light-italic {
-    font-family: "Ubuntu", sans-serif;
-    font-weight: 300;
-    font-style: italic;
-  }
-  
-  .ubuntu-regular-italic {
-    font-family: "Ubuntu", sans-serif;
-    font-weight: 400;
-    font-style: italic;
-  }
-  
-  .ubuntu-medium-italic {
-    font-family: "Ubuntu", sans-serif;
-    font-weight: 500;
-    font-style: italic;
-  }
-  
-  .ubuntu-bold-italic {
-    font-family: "Ubuntu", sans-serif;
-    font-weight: 700;
-    font-style: italic;
-  }
-  
-  .dm-sans-light {
-    font-family: "DM Sans", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 300;
-    font-style: normal;
-  }
+html,
+body,
+#root {
+  min-height: 100%;
+}
 
-  .dm-sans-bold {
-    font-family: "DM Sans", sans-serif;
-    font-optical-sizing: auto;
-    font-weight: 700;
-    font-style: normal;
-  }
-
-  .rowdies-light {
-    font-family: "Rowdies", sans-serif;
-    font-weight: 300;
-    font-style: normal;
-  }
-  
-  .rowdies-regular {
-    font-family: "Rowdies", sans-serif;
-    font-weight: 400;
-    font-style: italic;
-  }
-  
-  .rowdies-bold {
-    font-family: "Rowdies", sans-serif;
-    font-weight: 700;
-    font-style: normal;
-  }
-  
-  .luckiest-guy-regular {
-    font-family: "Luckiest Guy", cursive;
-    font-weight: 400;
-    font-style: normal;
-  }
+body {
+  margin: 0;
+  background: #f8fafc;
+}

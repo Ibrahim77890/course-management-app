@@ -9,6 +9,7 @@ const {
     verifyTokenAndAdmin,
   } = require("../middleware/verifyToken");
 const { getUserCourses, getUserCourse, postUserCourse, updateUserCourse } = require("../controllers/userCourses");
+const { requiredSignIn } = require("../middleware/authMiddleware");
 const router = express.Router();
 
 
@@ -16,16 +17,16 @@ const router = express.Router();
 router.route('/').get(verifyToken,getUserCourses);
 
 //Get tracked info about a particular course of that user
-router.route('/:courseId').get(verifyToken, getUserCourse);
+router.route('/:courseId').get(requiredSignIn, getUserCourse);
 
 //Add a new course information about a particular user
-router.route('/add-new').post(verifyToken, postUserCourse);
+router.route('/add-new').post(requiredSignIn, postUserCourse);
 
 //Update status of a particular content for user course tracking
-router.route('/:courseId').put(verifyToken, updateUserCourse)
+router.route('/:courseId').put(verifyToken, updateUserCourse);
 
 //Delete a particular course from list of courses of user
-router.route('/:courseId').delete(verifyToken)
+router.route('/:courseId').delete(verifyToken);
 
 
 module.exports = router

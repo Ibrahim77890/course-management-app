@@ -1,4 +1,4 @@
-import axios from "axios";
+import mockAxios from "../services/mockAxios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../provider/DetailProvider";
@@ -16,32 +16,13 @@ const Course = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  function parseJSONArrayFromString(jsonArrayString) {
-    try {
-      jsonArrayString = jsonArrayString.trim().replace(/^["']|["']$/g, "");
-      const jsonArray = JSON.parse(jsonArrayString);
-      if (!Array.isArray(jsonArray)) {
-        return [];
-      }
-      return removeNumbersFromArray(jsonArray);
-    } catch (error) {
-      console.error("Error parsing JSON array:", error);
-      return [];
-    }
-  }
-
-  function removeNumbersFromArray(arr) {
-    return arr.map((item) => {
-      const colonIndex = item.indexOf(":");
-      return item.slice(colonIndex + 2);
-    });
-  }
+  const contents = Array.isArray(course?.contents) ? course.contents : [];
 
   useEffect(() => {
     const coursePreviewDetails = async () => {
       try {
-        const fetchedCourse = await axios
-          .get(`http://localhost:5000/course/${courseId}`,{
+        const fetchedCourse = await mockAxios
+          .get(`/course/${courseId}`,{
             headers: {
               "Content-Type": "application/json",
               "Authorization": `Bearer ${authToken}`,
@@ -58,8 +39,8 @@ const Course = () => {
 
     const courseDetails = async () => {
       try {
-        const fetchedCourse = await axios
-          .get(`http://localhost:5000/course/${courseId}/details`,{headers: {
+        const fetchedCourse = await mockAxios
+          .get(`/course/${courseId}/details`,{headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${authToken}`,
           },})
@@ -74,8 +55,8 @@ const Course = () => {
 
     const decider = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:5000/my-courses/${courseId}`,
+        const response = await mockAxios.get(
+          `/my-courses/${courseId}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -106,8 +87,8 @@ const Course = () => {
 
   const enrollingInCourse = async () => {
     try {
-      const response = await axios.post(
-        "http://localhost:5000/cart/addToCart",
+      const response = await mockAxios.post(
+        "/cart/addToCart",
         { courseId },
         {
           headers: {
@@ -130,8 +111,8 @@ const Course = () => {
     try {
       console.log("Clicked");
 
-      const response = await axios.put(
-        "http://localhost:5000/course/enrollmentStatus",
+      const response = await mockAxios.put(
+        "/course/enrollmentStatus",
         { courseId, key: enrollmentKey },
         {
           headers: {
@@ -143,8 +124,8 @@ const Course = () => {
       if (response.status === 200) {
         console.log("Enrollment key validated");
 
-        const enrollmentResponse = await axios.post(
-          "http://localhost:5000/my-courses/add-new",
+        const enrollmentResponse = await mockAxios.post(
+          "/my-courses/add-new",
           { courseId },
           {
             headers: {
@@ -213,17 +194,12 @@ const Course = () => {
               </tr>
             </thead>
             <tbody>
-              {parseJSONArrayFromString(course?.contents[0]).map(
-                  (
-                    item,
-                    index // Corrected order of parameters
-                  ) => (
+              {contents.map((item, index) => (
                     <tr key={index}>
                       <td className="ubuntu-light text-justify pb-3 text-lg">{index + 1}</td>
                       <td className="ubuntu-light text-justify pb-3 text-lg">{item}</td>
                     </tr>
-                  )
-                )}
+                  ))}
 
             </tbody>
           </table>
@@ -301,7 +277,7 @@ const Course = () => {
                   <div className="w-full h-10 flex flex-row gap-4" key={index}>
                     <p className="p-4 bg-green-200 rowdies-light h-fit w-fit">{index}</p>
                     <a
-                      href={`http://localhost:5000/${file.path.replace(/^files[\\/]/, '')}`}
+                      href={file.path}
                       download={file.originalName}
                       className="text-blue-700 ubuntu-light h-fit p-4 w-full bg-blue-200"
                     >
@@ -318,7 +294,7 @@ const Course = () => {
           <img
             className="w-fit scale-[65%] rounded-xl"
             alt=""
-            src={`http://localhost:5000/${course?.image?.path.replace(/^files[\\/]/, '')}`}
+            src={course?.image?.path}
           />
         </div>
       </div>

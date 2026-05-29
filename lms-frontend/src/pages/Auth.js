@@ -1,4 +1,4 @@
-import axios from "axios";
+import mockAxios from "../services/mockAxios";
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/DetailProvider";
@@ -26,31 +26,26 @@ const Auth = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const url = login
-      ? "http://localhost:5000/app/sign-in"
-      : "http://localhost:5000/app/sign-up";
+    const url = login ? "/app/sign-in" : "/app/sign-up";
 
     try {
-      const response = await axios.post(url, formData);
+      const response = await mockAxios.post(url, formData);
 
       if (login) {
-        const authToken = await response.data.authToken;
+        const authToken = response.data.authToken;
         localStorage.setItem("token", authToken);
         if (response.status === 200 || response.status === 201) {
           alert("Login successful!");
         }
-        logIn({
-          email: formData.email,
-          authToken,
-          role: response.data.role,
-        });
+        logIn(response.data);
         const redirectTo = location.state?.from || "/home";
         navigate(redirectTo);
       }
 
       if (!login) {
         alert("Signup successful!");
-        setLogin(true);
+        logIn(response.data);
+        navigate("/home");
       }
 
       console.log(response.data); // Handle the response data as needed

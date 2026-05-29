@@ -2,16 +2,17 @@ import React, { useEffect, useState } from "react";
 import "./styles.css";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../provider/DetailProvider";
-import axios from "axios";
+import mockAxios from "../services/mockAxios";
 
 const authToken = localStorage.getItem("token");
 
-const UserCourse = ({ courseTitle, courseMajor, handleClick }) => {
+const UserCourse = ({ courseTitle, courseMajor, progress, handleClick }) => {
   return (
     <div className="bg-[#F6734A] h-full ubuntu-medium w-full flex rounded-md flex-col items-start p-5 justify-between mt-2">
       <div>
         <p>{courseTitle}</p>
         <p>Domain: {courseMajor}</p>
+        <p>Progress: {typeof progress === "number" ? progress : 0}%</p>
       </div>
       <div className="flex justify-center items-center w-fit h-8">
         <div
@@ -41,7 +42,7 @@ const Dashboard = () => {
     
     const fetchUserCourses = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/my-courses", {
+        const response = await mockAxios.get("/my-courses", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,

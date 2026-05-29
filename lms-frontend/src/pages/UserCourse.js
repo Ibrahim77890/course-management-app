@@ -1,57 +1,64 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import { Worker, Viewer } from "@react-pdf-viewer/core";
-// import PDFViewer from "../components/PDFViewer";
 import "./styles.css";
+import mockAxios from "../services/mockAxios";
+import { useAuth } from "../provider/DetailProvider";
 
 const UserCourse = () => {
-  const pdfFiles = [
-    {
-      id: 1,
-      url: "C:/Users/HP/OneDrive/Desktop/Ibrahim Learner Licence.pdf",
-      name: "Document 1",
-    },
-  ];
-
-  const contentSample = [
-    { number: "Chapter 1", name: "Nigga" },
-    { number: "Chapter 2", name: "Nigga" },
-    { number: "Chapter 3", name: "Nigga" },
-  ];
-
+  const { user } = useAuth();
+  const [courses, setCourses] = useState([]);
   const navigate = useNavigate();
-  const handleRedirect = () => {
-    navigate("/dashboard");
-  };
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/");
+      return;
+    }
+
+    const fetchCourses = async () => {
+      try {
+        const response = await mockAxios.get("/my-courses");
+        setCourses(response.data.courses || []);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchCourses();
+  }, [navigate, user]);
+
   return (
     <div className="h-screen w-screen flex gap-8 flex-col bg-gray-300 overflow-auto px-8">
       <p
-        onClick={handleRedirect}
-        className="mt-8 text-gray-800 font-semibold cursor-pointer mb-16 ubuntu-medium"
+        onClick={() => navigate("/dashboard")}
+        className="mt-8 text-gray-800 font-semibold cursor-pointer mb-8 ubuntu-medium"
       >
         Dashboard
       </p>
-      <p className="ubuntu-medium text-6xl">Professional Ethics</p>
-      <p className="ubuntu-medium text-4xl">Dr. Neelma Riaz</p>
-      <p className="ubuntu-medium text-2xl">Content</p>
-      <div className="h-fit w-full flex flex-col border-black border-2 ubuntu-regular p-0">
-      {contentSample.map((item, index) => {
-        return (
-            <div className="flex flex-row border-2 border-black justify-evenly">
-            <p>{item.number}</p>
-            <p>{item.name}</p>
+      <p className="ubuntu-medium text-6xl">My learning space</p>
+      <p className="ubuntu-medium text-4xl">Courses you are enrolled in</p>
+      <div className="h-fit w-full flex flex-col border-black border-2 ubuntu-regular p-0 bg-white">
+        {courses.length === 0 && (
+          <div className="p-6 text-lg">You are not enrolled in any course yet.</div>
+        )}
+        {courses.map((course) => (
+          <div key={course.courseId} className="flex flex-row border-b border-black justify-between px-4 py-3">
+            <div>
+              <p className="font-semibold">{course.title}</p>
+              <p>Domain: {course.major}</p>
+              <p>Instructor: {course.instructor}</p>
+              <p>Progress: {course.progress}%</p>
             </div>
-        );
-    })}
-    </div>
-      {/* Dynamically render course content here in the table */}
-      <p className="ubuntu-medium text-2xl">Course Files</p>
-      {pdfFiles.map((file) => (
-        <div key={file.id} className="border-black border-2 p-4 rounded-lg shadow-lg">
-          <h2 className="text-xl font-semibold mb-2">{file.name}</h2>
-          {/* <PDFViewer fileUrl={file.url} /> */}
-        </div>
-      ))}
+            <button
+              type="button"
+              onClick={() => navigate(`/home/course/${course.courseId}`)}
+              className="px-4 py-2 bg-black text-white"
+            >
+              Open
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

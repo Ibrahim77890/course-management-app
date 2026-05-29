@@ -13,6 +13,7 @@ const {
   verifyTokenAndAdmin,
 } = require("../middleware/verifyToken");
 const upload = require("../middleware/multer");
+const { requiredSignIn, isAdmin } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
@@ -43,7 +44,8 @@ const uploadFieldTest = (req, res, next) => {
 
 router.route("/new-course")
   .post(
-    verifyTokenAndAdmin,
+    requiredSignIn,
+    // isAdmin,
     uploadField,
     postCourse
   );
@@ -61,7 +63,7 @@ router.route("/:courseId/update").put(verifyTokenAndAdmin, updateCourse);
 router.route("/:courseId").delete(verifyTokenAndAdmin, deleteCourse);
 
 //Route to get the status if course contains enrollment key or not
-router.route("/enrollmentStatus").put(verifyToken, putStatusToken);
+router.route("/enrollmentStatus").put(requiredSignIn, putStatusToken);
 
 //Testing route for checking of cloudinary is working or not
 router.route("/cloudinary").post(uploadFieldTest, postFiles);

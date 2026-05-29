@@ -4,7 +4,7 @@ const bcryptjs = require('bcryptjs');
 
 
 const postSignUp = expressAsyncHandler(async (req, res, next) => {
-    const { username, email, password, role } = req.body;
+    const { _id,username, email, password, role } = req.body;
 
     // Check if email or username already exists
     const existingUser = await Users.findOne({ $or: [{ email }, { username }] });
@@ -19,6 +19,7 @@ const postSignUp = expressAsyncHandler(async (req, res, next) => {
 
         // Create a new user instance
         const newUser = new Users({
+            _id,
             username,
             email,
             password: hashedPassword,

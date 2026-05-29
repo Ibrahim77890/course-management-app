@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import axios from "axios";
+import mockAxios from "../services/mockAxios";
 import Sidebar from "../components/Sidebar";
 import { Link } from "react-router-dom";
 import CoursesList from "../components/CoursesList";
@@ -35,6 +35,19 @@ const CardComponent = ({ name }) => {
 
 const majors = ["Information Technology", "Humanities", "Languages"];
 
+const SearchResultCard = ({ course }) => (
+  <Link
+    to={`/home/course/${course._id}`}
+    className="flex items-center justify-between gap-4 border-b border-slate-200 px-4 py-3 hover:bg-slate-50"
+  >
+    <div>
+      <p className="font-semibold text-[#20385C]">{course.title}</p>
+      <p className="text-sm text-slate-500">{course.instructor}</p>
+    </div>
+    <p className="text-sm font-semibold text-[#20385C]">${course.price}</p>
+  </Link>
+);
+
 const Home = () => {
   const { user } = useAuth();
   const [results, setResults] = useState(null);
@@ -44,9 +57,13 @@ const Home = () => {
 
   useEffect(() => {
     const container = scrollContainerRef.current;
+    if (!container) {
+      return undefined;
+    }
+
     const handleScroll = (event) => {
       event.preventDefault();
-      container.scrollTop += event.deltaY * 0.4; // Adjust damping factor here
+      container.scrollTop += event.deltaY * 0.4;
     };
 
     container.addEventListener("wheel", handleScroll, { passive: false });
@@ -54,16 +71,16 @@ const Home = () => {
     return () => {
       container.removeEventListener("wheel", handleScroll);
     };
-  });
+  }, []);
 
   const handleSearch = async (e) => {
     const searchTerm = e.target.value;
     setQuery(searchTerm);
 
-    if (query.length > 1) {
+    if (searchTerm.length > 1) {
       try {
-        const response = await axios.get(
-          `https://localhost:5000/courses/search?q=${query}`
+        const response = await mockAxios.get(
+          `/courses/search?q=${encodeURIComponent(searchTerm)}`
         );
         setResults(response.data);
       } catch (error) {
@@ -113,14 +130,15 @@ const Home = () => {
                   id="voice-search"
                   class="px-10 py-2 w-full border-gray-300 bg-slate-100 border-2 rounded-lg"
                   placeholder="Search Courses..."
+                  value={query}
                   onChange={handleSearch}
                 />
               </div>
               {results?.length > 0 && (
-                <div className="h-fit z-10 absolute bg-white w-full border-2 border-gray-600">
-                  <div className="ubuntu-regular flex text-xl justify-between overflow-hidden">
-                    <p>CourseName </p>
-                  </div>
+                <div className="h-fit z-10 absolute bg-white w-full border-2 border-gray-200 shadow-xl rounded-lg overflow-hidden">
+                  {results.map((course) => (
+                    <SearchResultCard key={course._id} course={course} />
+                  ))}
                 </div>
               )}
             </form>

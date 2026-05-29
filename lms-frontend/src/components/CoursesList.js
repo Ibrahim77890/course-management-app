@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import mockAxios from "../services/mockAxios";
 import { useNavigate } from "react-router-dom";
 
 const CourseListComponent = ({ item }) => {
@@ -14,7 +14,7 @@ const CourseListComponent = ({ item }) => {
       className="w-[300px] h-fit bg-white border-[#20385C] border-2 justify-self-center rounded-md flex flex-col shadow-xl hover:scale-[101%] p-4 gap-2 justify-evenly"
     >
       <img
-        src={`http://localhost:5000/${item?.image?.path.replace(/^files[\\/]/, '')}`}
+        src={item?.image?.path}
         alt=""
         className="h-3/5 w-full object-cover"
       />
@@ -51,9 +51,7 @@ const CoursesList = ({ variant = "latest" }) => {
           throw new Error(`Invalid variant: ${variant}`);
         }
 
-        const response = await axios.get(responseString, {
-          headers: { "Content-Type": "application/json" },
-        });
+        const response = await mockAxios.get(responseString);
 
         if (response && response.data && Array.isArray(response.data.courses)) {
           setCourses(response.data.courses);

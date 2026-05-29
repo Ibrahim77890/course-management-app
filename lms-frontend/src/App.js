@@ -17,11 +17,15 @@ function App() {
         <Routes>
           <Route path='/' element={<Auth />} />
           <Route path='/home' element={<Home/>}/>
+          <Route path='/enrolled' element={<Dashboard/>} />
+          <Route path='/completed' element={<UserCourse/>} />
           <Route path='/admin-panel' element={<Admin/>}/>
           <Route path='/dashboard' element={<Dashboard/>}/>
           <Route path='/cart' element={<Cart/>}/>
           <Route path='/cart/success' element={<CartSucess/>} />
           <Route path='/home/new-course' element={<NewCourse/>} />
+          <Route path='/home/delete-course' element={<NewCourse/>} />
+          <Route path='/home/update-course' element={<NewCourse/>} />
           <Route path='/home/course/:courseId' element={<Course/>} />
           <Route path='/your-course' element={<UserCourse/>}/>
         </Routes>

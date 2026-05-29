@@ -156,7 +156,7 @@ const stripePaymentGateway = expressAsyncHandler(async (req, res, next) => {
         const session = await stripe.checkout.sessions.create({
             payment_method_types: ["card"],
             mode: "payment",
-            success_url: `http://localhost:3000/cart/success`,
+            success_url: `http://localhost:3000/lms-cart-success`,
             cancel_url: `http://localhost:3000/cart`,
             customer_email: user.email,
             client_reference_id: cart._id.toString(), // Ensure _id is a string
@@ -241,7 +241,7 @@ const postEnrollments = expressAsyncHandler(async (req, res, next) => {
         await Cart.findOneAndDelete({ currentUser: userId });
         console.log(enrollmentKeys)
 
-        res.status(200).json({
+        res.status(209).json({
             message: "Enrollment keys generated successfully",
             enrollmentKeys,
         });
@@ -252,6 +252,10 @@ const postEnrollments = expressAsyncHandler(async (req, res, next) => {
             details: error.message,
         });
     }
+});
+
+const printEnrollmentKey = expressAsyncHandler(async (req, res, next) => {
+    const enrollmentKey = Courses.find
 });
 
 module.exports = {
